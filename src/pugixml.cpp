@@ -184,7 +184,7 @@ using std::free;
 #endif
 
 // uintptr_t
-#if (defined(_MSC_VER) && _MSC_VER < 1600) || (defined(__BORLANDC__) && __BORLANDC__ < 0x561)
+#if (defined(_MSC_VER) && _MSC_VER < 1600) || (defined(__BORLANDC__) && __BORLANDC__ < 0x561) || defined(__OS400__)
 namespace pugi
 {
 #	ifndef _UINTPTR_T_DEFINED
@@ -197,6 +197,12 @@ namespace pugi
 }
 #else
 #	include <stdint.h>
+#endif
+
+// Change literal conversion to UTF-8. This is how literals are interpreted in this source-file,
+// so they are created correctly in the xml utf8 output.
+#if defined(__OS400__)
+#pragma convert(1208)
 #endif
 
 // Memory allocation
@@ -13156,6 +13162,11 @@ namespace pugi
 	}
 }
 
+#endif
+
+// Change literal conversion back to default
+#if defined(__OS400__)
+#pragma convert(0)
 #endif
 
 #ifdef __BORLANDC__

@@ -1041,8 +1041,12 @@ namespace pugi
 	private:
 		char_t* _buffer;
 
+#if defined(__OS400__)
+		// OS/400 uses 128 bit pointer
+		char _memory[192*2]; 
+#else
 		char _memory[192];
-
+#endif 
 		// Non-copyable semantics
 		xml_document(const xml_document&);
 		xml_document& operator=(const xml_document&);
