@@ -90,6 +90,10 @@
 #	pragma diag_suppress 179 // function was declared but never referenced
 #endif
 
+#if defined(__OS400__)
+#	pragma convert(1208) // Change conversion of literal to utf8 (codepage 1208)
+#endif
+
 // Inlining controls
 #if defined(_MSC_VER) && _MSC_VER >= 1300
 #	define PUGI_IMPL_NO_INLINE __declspec(noinline)
@@ -197,12 +201,6 @@ namespace pugi
 }
 #else
 #	include <stdint.h>
-#endif
-
-// Change literal conversion to UTF-8. This is how literals are interpreted in this source-file,
-// so they are created correctly in the xml utf8 output.
-#if defined(__OS400__)
-#pragma convert(1208)
 #endif
 
 // Memory allocation
@@ -13166,9 +13164,8 @@ namespace pugi
 
 #endif
 
-// Change literal conversion back to default
 #if defined(__OS400__)
-#pragma convert(0)
+#	pragma convert(0) // Change conversion of literal back to default
 #endif
 
 #ifdef __BORLANDC__
