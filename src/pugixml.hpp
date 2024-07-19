@@ -1,7 +1,7 @@
 /**
  * pugixml parser - version 1.14
  * --------------------------------------------------------
- * Copyright (C) 2006-2023, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
+ * Copyright (C) 2006-2024, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
  * Report bugs and download new versions at https://pugixml.org/
  *
  * This library is distributed under the MIT License. See notice at the end
@@ -396,7 +396,7 @@ namespace pugi
 		bool operator<=(const xml_attribute& r) const;
 		bool operator>=(const xml_attribute& r) const;
 
-		// Check if attribute is empty
+		// Check if attribute is empty (null)
 		bool empty() const;
 
 		// Get attribute name/value, or "" if attribute is empty
@@ -507,7 +507,7 @@ namespace pugi
 		bool operator<=(const xml_node& r) const;
 		bool operator>=(const xml_node& r) const;
 
-		// Check if node is empty.
+		// Check if node is empty (null)
 		bool empty() const;
 
 		// Get node type
@@ -764,7 +764,7 @@ namespace pugi
 		// Borland C++ workaround
 		bool operator!() const;
 
-		// Check if text object is empty
+		// Check if text object is empty (null)
 		bool empty() const;
 
 		// Get text, or "" if object is empty
@@ -1495,7 +1495,7 @@ namespace std
 #endif
 
 /**
- * Copyright (c) 2006-2023 Arseny Kapoulkine
+ * Copyright (c) 2006-2024 Arseny Kapoulkine
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
