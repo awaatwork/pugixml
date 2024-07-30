@@ -188,7 +188,7 @@ using std::free;
 #endif
 
 // uintptr_t
-#if (defined(_MSC_VER) && _MSC_VER < 1600) || (defined(__BORLANDC__) && __BORLANDC__ < 0x561) || defined(__OS400__)
+#if (defined(_MSC_VER) && _MSC_VER < 1600) || (defined(__BORLANDC__) && __BORLANDC__ < 0x561)
 namespace pugi
 {
 #	ifndef _UINTPTR_T_DEFINED
@@ -199,6 +199,12 @@ namespace pugi
 	typedef unsigned __int16 uint16_t;
 	typedef unsigned __int32 uint32_t;
 }
+#elif defined(__OS400__)
+#	include <stdint.h>
+#	ifndef _UINTPTR_T_DEFINED
+	// There is no __int128 and size_t is only 4 byte on i5/OS (OS/400), so we use nearest type
+	typedef unsigned __int64 uintptr_t;
+#	endif
 #else
 #	include <stdint.h>
 #endif

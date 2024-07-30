@@ -1042,7 +1042,7 @@ namespace pugi
 		char_t* _buffer;
 
 #if defined(__OS400__)
-		// OS/400 uses 128 bit pointer
+		// i5/OS (OS/400) uses 128 bit pointers
 		char _memory[192*2]; 
 #else
 		char _memory[192];
