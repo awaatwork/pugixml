@@ -61,6 +61,12 @@
 #	endif
 #endif
 
+#ifdef PUGIXML_P128
+#	ifdef PUGIXML_COMPACT
+#		error "PUGIXML_P128 and PUGIXML_COMPACT are mutually exclusive"
+#	endif
+#endif
+
 // If no API is defined, assume default
 #ifndef PUGIXML_API
 #	define PUGIXML_API

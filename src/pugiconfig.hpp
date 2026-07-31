@@ -21,6 +21,10 @@
 // Uncomment this to enable compact mode
 // #define PUGIXML_COMPACT
 
+// Uncomment this to enable 128 Bit pointer mode for IBM-i OS.
+// PUGIXML_P128 and PUGIXML_COMPACT are mutually exclusive!
+// #define PUGIXML_P128
+
 // Uncomment this to disable XPath
 // #define PUGIXML_NO_XPATH
 
