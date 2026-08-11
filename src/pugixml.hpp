@@ -61,12 +61,6 @@
 #	endif
 #endif
 
-#ifdef PUGIXML_P128
-#	ifdef PUGIXML_COMPACT
-#		error "PUGIXML_P128 and PUGIXML_COMPACT are mutually exclusive"
-#	endif
-#endif
-
 // If no API is defined, assume default
 #ifndef PUGIXML_API
 #	define PUGIXML_API
@@ -88,6 +82,14 @@
 #		define PUGIXML_HAS_LONG_LONG
 #	elif defined(_MSC_VER) && _MSC_VER >= 1400
 #		define PUGIXML_HAS_LONG_LONG
+#	endif
+#endif
+
+// If the platform is known to have 128-bit pointer support, enable P128 
+// For example the IBM i single-level-storage (P128) uses 128 bit pointers
+#ifndef PUGIXML_HAS_P128
+#	if defined(__OS400__) && !defined(__LLP64_IFC__)
+#		define PUGIXML_HAS_P128
 #	endif
 #endif
 
@@ -156,6 +158,10 @@
 #else
 #	define PUGIXML_TEXT(t) t
 #	define PUGIXML_CHAR char
+#endif
+
+#if defined(PUGIXML_HAS_P128) && defined(PUGIXML_COMPACT)
+#	error "The compact mode is currently not available on systems with 128-bit pointers"
 #endif
 
 namespace pugi
@@ -1135,9 +1141,8 @@ namespace pugi
 	private:
 		char_t* _buffer;
 
-#if defined(__OS400__)
-		// i5/OS (OS/400) uses 128 bit pointers
-		char _memory[192*2]; 
+#ifdef PUGIXML_HAS_P128
+		char _memory[320];
 #else
 		char _memory[192];
 #endif 

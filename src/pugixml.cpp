@@ -502,9 +502,6 @@ PUGI_IMPL_NS_BEGIN
 #ifdef PUGIXML_COMPACT
 	#define PUGI_IMPL_GETHEADER_IMPL(object, page, flags) // unused
 	#define PUGI_IMPL_GETPAGE_IMPL(header) (header).get_page()
-#elif defined(PUGIXML_P128)
-	#define PUGI_IMPL_GETHEADER_IMPL(object, page, flags) // unused
-	#define PUGI_IMPL_GETPAGE_IMPL(header) (header).get_page()
 #else
 	#define PUGI_IMPL_GETHEADER_IMPL(object, page, flags) (((reinterpret_cast<char*>(object) - reinterpret_cast<char*>(page)) << 8) | (flags))
 	// this macro casts pointers through void* to avoid 'cast increases required alignment of target type' warnings
@@ -512,12 +509,7 @@ PUGI_IMPL_NS_BEGIN
 #endif
 
 	#define PUGI_IMPL_GETPAGE(n) PUGI_IMPL_GETPAGE_IMPL((n)->header)
-
-#ifdef PUGIXML_P128
-	#define PUGI_IMPL_NODETYPE(n) static_cast<xml_node_type>((n)->header.get_flags() & impl::xml_memory_page_type_mask)
-#else
 	#define PUGI_IMPL_NODETYPE(n) static_cast<xml_node_type>((n)->header & impl::xml_memory_page_type_mask)
-#endif
 
 	struct xml_allocator;
 
@@ -1108,45 +1100,6 @@ PUGI_IMPL_NS_BEGIN
 		unsigned char _data;
 	};
 PUGI_IMPL_NS_END
-#elif defined(PUGIXML_P128)
-PUGI_IMPL_NS_BEGIN
-	class p128_header
-	{
-	public:
-		p128_header(xml_memory_page* page, unsigned int flags) : _page(page), _flags(flags)
-		{
-		}
-
-		void operator&=(uintptr_t mod)
-		{
-			_flags &= static_cast<unsigned char>(mod);
-		}
-
-		void operator|=(uintptr_t mod)
-		{
-			_flags |= static_cast<unsigned char>(mod);
-		}
-
-		uintptr_t operator&(uintptr_t mod) const
-		{
-			return _flags & mod;
-		}
-
-		xml_memory_page* get_page() const
-		{
-			return _page;
-		}
-
-		unsigned int get_flags() const
-		{
-			return _flags;
-		}
-
-	private:
-		xml_memory_page* _page;
-		unsigned int _flags;
-	};
-PUGI_IMPL_NS_END
 #endif
 
 #ifdef PUGIXML_COMPACT
@@ -1192,45 +1145,6 @@ namespace pugi
 		impl::compact_pointer<xml_node_struct, 10, 0> next_sibling;
 
 		impl::compact_pointer<xml_attribute_struct, 11, 0> first_attribute;
-	};
-}
-#elif defined(PUGIXML_P128)
-namespace pugi
-{
-	struct xml_attribute_struct
-	{
-		xml_attribute_struct(impl::xml_memory_page* page): header(page, 0), name(NULL), value(NULL), prev_attribute_c(NULL), next_attribute(NULL)
-		{
-		}
-
-		impl::p128_header header;
-
-		char_t*	name;
-		char_t*	value;
-
-		xml_attribute_struct* prev_attribute_c;
-		xml_attribute_struct* next_attribute;
-	};
-
-	struct xml_node_struct
-	{
-		xml_node_struct(impl::xml_memory_page* page, xml_node_type type): header(page, type), name(NULL), value(NULL), parent(NULL), first_child(NULL), prev_sibling_c(NULL), next_sibling(NULL), first_attribute(NULL)
-		{
-		}
-
-		impl::p128_header header;
-
-		char_t* name;
-		char_t* value;
-
-		xml_node_struct* parent;
-
-		xml_node_struct* first_child;
-
-		xml_node_struct* prev_sibling_c;
-		xml_node_struct* next_sibling;
-
-		xml_attribute_struct* first_attribute;
 	};
 }
 #else
